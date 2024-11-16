@@ -1,0 +1,37 @@
+# The makeCacheMatrix and cacheSolve functions work together to compute and cache 
+# the inverse of a given invertible matrix. This reduces redundant computations
+# by getting the cached inverse if the matrix has not been changed.
+
+
+# Function to create a special "matrix" that caches its inverse
+makeCacheMatrix <- function(x = matrix()) {
+  inverse <- NULL 
+  set <- function(new_matrix) {
+    x <<- new_matrix 
+    inverse <<- NULL  
+  }
+  get <- function() {
+    x
+  }
+  setInverse <- function(inv) {
+    inverse <<- inv
+  }
+  getInverse <- function() {
+    inverse
+  }
+  list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)
+}
+
+# Function to compute the inverse or return the cached result
+cacheSolve <- function(x, ...) {
+  inverse <- x$getInverse()
+   if (!is.null(inverse)) {
+    message("Getting cached inverse")
+    return(inverse)
+  }
+  matrix <- x$get()
+  inverse <- solve(matrix, ...) 
+  x$setInverse(inverse)  
+  
+  inverse
+}
